@@ -1,0 +1,94 @@
+* {
+  margin : 0;
+  padding : 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Helvetica neue, Arial;
+  font-size: 18px;
+  background-color: #f0f0f0;
+  margin-top: 20px;
+}
+
+h1 {
+  color: red;
+  font-size: 40px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+h2 {
+  color: orange;
+  font-size: 35px;
+  font-weight: 300;
+}
+
+p.content {
+  font-size: 16px;
+  line-height: 150%;
+  text-align: justify;
+  padding: 10px 10px 10px 10px;
+}
+
+div.container {
+  width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.blog-post {
+  width : 75%;
+  float: left;
+  padding-right: 20px;
+  padding-left: 20px;
+  //background-color: blue;
+}
+
+.blog-post img {
+  width: 200px;
+  margin: 0 auto;
+  display: block;
+  border: 2px solid black;
+  padding : 5px;
+  box-shadow: 0px 0px 1px black;
+}
+
+.aside {
+  color: red;
+  float: right;
+  width: 25%;
+}
+
+.aside h2{
+  color: red
+}
+.aside div {
+  margin : 10px;
+  color: orange;
+}
+
+.clearfix::after{
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.author-box {
+  margin-top: 20px;
+  border-top: 3px solid grey;
+  padding : 10px;
+}
+
+.author-box img {
+  border-radius: 50px;
+  height: 100px;
+  width: 100px;
+  float: left;
+}
+
+.author-box div {
+  float: left;
+  margin-left: 20px;
+  margin-top: 35px;
+}
