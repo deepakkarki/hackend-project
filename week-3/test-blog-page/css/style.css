@@ -1,0 +1,112 @@
+* {
+  margin : 0;
+  padding : 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Helvetica neue, Arial;
+  font-size: 18px;
+  background-color: #f0f0f0;
+  margin-top: 20px;
+}
+
+h1 {
+  color: red;
+  font-size: 40px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+h2 {
+  color: orange;
+  font-size: 35px;
+  font-weight: 300;
+}
+
+p.content {
+  font-size: 16px;
+  line-height: 150%;
+  text-align: justify;
+  padding: 10px 10px 10px 10px;
+}
+
+.container {
+  width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.blog-post {
+  width : 75%;
+  float: left;
+  padding-right: 20px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.date {
+  top : 25px;
+  right: 30px;
+  position: absolute;
+  font-style: oblique;
+  font-size: 16px;
+  color: grey;
+}
+
+.blog-post img {
+  width: 200px;
+  margin: 0 auto;
+  display: block;
+  border: 2px solid black;
+  padding : 5px;
+  box-shadow: 0px 0px 1px black;
+}
+
+.aside {
+  float: right;
+  width: 25%;
+}
+
+.clearfix::after{
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.author-box {
+  margin-top: 20px;
+  padding : 10px;
+}
+
+.author-box img {
+  border-radius: 60px;
+  height: 120px;
+  width: 120px;
+  margin: 0 auto;
+  display: block;
+  padding: 10px;
+}
+
+.author-box div, p {
+  text-align: center;
+  margin: 5px;
+}
+
+.author-box p {
+  font-size: 16px;
+  line-height: 140%;
+  font-weight: 200;
+}
+
+.other-posts h2{
+  color: red;
+  text-align: center;
+}
+.other-posts div {
+  margin : 10px;
+  margin-left: 15px;
+  color: orange;
+}
