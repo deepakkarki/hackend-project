@@ -1,3 +1,8 @@
+/*
+CSS code for killer website
+*/
+
+/*general defaults for all elements*/
 * {
   margin: 0px;
   padding: 0px;
@@ -13,10 +18,13 @@ html {
   text-rendering: optimizeLegibility;
 }
 
+
 .row {
   max-width: 1140px;
   margin: 0, auto;
 }
+
+/*CSS for the header element*/
 
 header {
   background-image: linear-gradient(rgba(0,0,0, 0.7),rgba(0,0,0, 0.7)), url(../img/hero.jpg);
@@ -25,6 +33,7 @@ header {
   height: 100vh;
 }
 
+/*Text box viz centered*/
 .hero-text-box {
   position: absolute;
   width: 1140px;
@@ -42,6 +51,7 @@ h1 {
   word-spacing: 5px;
 }
 
+/*Styles for the buttons*/
 .btn:link,
 .btn:visited {
   display: inline-block;
@@ -82,3 +92,5 @@ h1 {
   border: 1px solid #cf6d17;
   color: #fff;
 }
+
+/*Style for nav*/
