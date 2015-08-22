@@ -51,6 +51,11 @@ h1 {
   word-spacing: 5px;
 }
 
+section {
+  padding: 80px 0px;
+}
+
+
 /*Styles for the buttons*/
 .btn:link,
 .btn:visited {
