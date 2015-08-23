@@ -102,6 +102,14 @@ section {
   padding: 1%;
 }
 
+.icon-big {
+  font-size: 300%;
+  color: orange;
+  display: block;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
 /*Styles for the buttons*/
 .btn:link,
 .btn:visited {
