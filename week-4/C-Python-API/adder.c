@@ -4,7 +4,21 @@
 
 static PyObject* addList_add(PyObject* self, PyObject* args){
   //logic here
-  int sum = 0;
+  PyObject * listObj;
+  if (! PyArg_ParseTuple( args, "O!", &PyList_Type, &listObj))
+    return NULL;
+
+  //length of the list
+  long length = PyList_Size(listObj);
+
+  //iterate over all the elements
+  int i, sum =0;
+  for(i = 0; i < length; i++){
+    PyObject* temp = PyList_GetItem(listObj, i);
+    long elem = PyInt_AsLong(temp);
+    sum += elem;
+  }
+
   return Py_BuildValue("i", sum);
 }
 
