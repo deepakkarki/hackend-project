@@ -80,3 +80,74 @@ In the python file, first the ctypes module is imported. Then the CDLL function 
 
 For other types such as boolean or float, we have to use the correct ctypes. This is seen while passing parameters to the `adder.add_float()`. We first create the required c_float types from python deciaml values, and then use them as arguments to the C code.
 This method is simple and clean, but limited. For example it's not possible to manipulate objects on the C side.
+
+##2. SWIG
+
+Simplified Wrapper and Interface Generator, or SWIG for short is aother way to interface C code to Python. In this method, the developer must develop an extra interface file which is an input to SWIG (the command line utility).
+
+Python developers generally don't use this method, because it is in most cases unnecessarily complex. This is a great method when you have a C/C++ code base, and you want to interface it to many different languages.
+
+Example from the SWIG website :
+
+The C code, `example.c` that has a variety of functions and variables
+
+```c
+ #include <time.h>
+ double My_variable = 3.0;
+
+ int fact(int n) {
+     if (n <= 1) return 1;
+     else return n*fact(n-1);
+ }
+
+ int my_mod(int x, int y) {
+     return (x%y);
+ }
+
+ char *get_time()
+ {
+     time_t ltime;
+     time(&ltime);
+     return ctime(&ltime);
+ }
+```
+
+The interface file - this will remain the same irrespective of the language you want to port your C code to :
+
+```
+/* example.i */
+ %module example
+ %{
+ /* Put header files here or function declarations like below */
+ extern double My_variable;
+ extern int fact(int n);
+ extern int my_mod(int x, int y);
+ extern char *get_time();
+ %}
+
+ extern double My_variable;
+ extern int fact(int n);
+ extern int my_mod(int x, int y);
+ extern char *get_time();
+```
+And now to compile it
+
+```
+unix % swig -python example.i
+unix % gcc -c example.c example_wrap.c \
+        -I/usr/local/include/python2.1
+unix % ld -shared example.o example_wrap.o -o _example.so
+```
+
+Finally, the Python output
+
+```python
+>>> import example
+>>> example.fact(5)
+120
+>>> example.my_mod(7,3)
+1
+>>> example.get_time()
+'Sun Feb 11 23:01:07 1996'
+>>>
+```
