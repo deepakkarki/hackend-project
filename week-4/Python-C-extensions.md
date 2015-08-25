@@ -151,3 +151,10 @@ Finally, the Python output
 'Sun Feb 11 23:01:07 1996'
 >>>
 ```
+
+##3. Python/C API
+
+This is probably the most widely used method - not for it's simplicity but for the fact that you can manipulate python objects in your C code.
+
+This method requires your C code to be specifically written for interfacing with Python code. All Python objects are represented as a PyObject struct and the `Python.h` header file provides various functions to manipulate it.
+For example if the PyObject is also a PyListType (basically a list), then we can use the `PyList_Size()` function on the struct to get the length of the list. This is equivalent to calling `len(list)` in python. Most of the basic functions/opertions that are there for native Python objects are made avialble in C via the `Python.h` header.
