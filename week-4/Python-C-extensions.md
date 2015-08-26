@@ -152,9 +152,95 @@ Finally, the Python output
 >>>
 ```
 
+As we can see, SWIG achieves the same result, but requires a slightly more involved effort. But it's worth it if you are targetting multiple languages.
+
 ##3. Python/C API
 
 This is probably the most widely used method - not for it's simplicity but for the fact that you can manipulate python objects in your C code.
 
 This method requires your C code to be specifically written for interfacing with Python code. All Python objects are represented as a PyObject struct and the `Python.h` header file provides various functions to manipulate it.
 For example if the PyObject is also a PyListType (basically a list), then we can use the `PyList_Size()` function on the struct to get the length of the list. This is equivalent to calling `len(list)` in python. Most of the basic functions/opertions that are there for native Python objects are made avialble in C via the `Python.h` header.
+
+Example - To write a C extension that adds all the elements in a python list. (all elements are numbers)
+
+Let's start with the final interface we'd like to have, here is the python file that uses the C extension :
+
+```python
+#Though it looks like an ordinary python import, the addList module is implemented in C
+import addList
+
+l = [1,2,3,4,5]
+print "Sum of List - " + str(l) + " = " +  str(addList.add(l))
+```
+
+The above looks like any ordinary python file, which imports and uses another python module called `addList`. The only difference is that the addList module is not written in Python at all, but rather in C.
+
+Next we'll have a look at the C code that get's built into the `addList` Python module. This may seem a bit daunting at first, but once you understand the various components that go into writing the C file, it's pretty straight forward.
+
+*adder.c*
+```c
+//Python.h has all the required function definitions to manipulate the Python objects
+#include <Python.h>
+
+ //This is the function that is called from your python code
+static PyObject* addList_add(PyObject* self, PyObject* args){
+
+  PyObject * listObj;
+
+  //The input arguments come as a tuple, we parse the args to get the various variables
+  //In this case it's only one list variable, which will now be referenced by listObj
+  if (! PyArg_ParseTuple( args, "O", &listObj))
+    return NULL;
+
+  //length of the list
+  long length = PyList_Size(listObj);
+
+  //iterate over all the elements
+  int i, sum =0;
+  for(i = 0; i < length; i++){
+    //get an element out of the list - the element is also a python objects
+    PyObject* temp = PyList_GetItem(listObj, i);
+    //we know that object represents an integer - so convert it into C long
+    long elem = PyInt_AsLong(temp);
+    sum += elem;
+  }
+
+  //value returned back to python code - another python object
+  //build value here converts the C long to a python integer
+  return Py_BuildValue("i", sum);
+}
+
+//This is the docstring that corresponds to our 'add' function.
+static char addList_docs[] =
+    "add( ): add all elements of the list\n";
+
+/* This table contains the relavent info mapping -
+  <function-name in python module>, <actual-function>,
+  <type-of-args the function expects>, <docstring associated with the function>
+*/
+static PyMethodDef addList_funcs[] = {
+    {"add", (PyCFunction)addList_add, METH_VARARGS, addList_docs},
+    {NULL, NULL, 0, NULL}
+};
+
+/*
+addList is the module name, and this is the initialization block of the module.
+<desired module name>, <the-info-table>, <module's-docstring>
+*/
+PyMODINIT_FUNC initaddList(void){
+    Py_InitModule3("addList", addList_funcs,
+                   "Add all ze lists");
+}
+```
+
+A step by step explanation -
+* The `<Python.h>` file consists of all the required types (to represent Python object types) and function definitions (to operate on the python objects).
+* Next we write the function which we plan to call from python. Conventionally the function names are {module-name}\_{function-name}, which in this case is `addList_add`. More about the function later.
+* Then fill in the info table - which contains all the relavent info of the functions we desire to have in the module. Every row corresponds to a function, with the last one being a sentinal value (row of null elements).
+* Finally the module initalization block which is of the signature `PyMODINIT_FUNC init{module-name}`.
+
+The function `addList_add` accepts arguments as a PyObject type struct (args is also a tuple type - but since everything in python is an object, we use the generic PyObject notion).
+The incoming arguments is parsed (basically split the tuple into individual elements) by `PyArg_ParseTuple()`. The first parameter is the argument variable to be parsed.
+The second argument is a string that tells us how to parse each element in the args tuple. The character in the Nth position of the string tells us the type of the Nth element in the args tuple, example - Integer would be 'i', String would be 's' and a Python object would be 'O'.
+Next multiple arguments follow, these are the address of the variables where you would like to store the values of the elements just parsed. One variable for each element in the args tuple, and positional integrity is maintained.
+Here we expect only one element, so we have only `"O"`. If we expected a string, integer and a python object in that order, the argument would be `"siO"`.
