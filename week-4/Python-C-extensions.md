@@ -241,6 +241,58 @@ A step by step explanation -
 
 The function `addList_add` accepts arguments as a PyObject type struct (args is also a tuple type - but since everything in python is an object, we use the generic PyObject notion).
 The incoming arguments is parsed (basically split the tuple into individual elements) by `PyArg_ParseTuple()`. The first parameter is the argument variable to be parsed.
-The second argument is a string that tells us how to parse each element in the args tuple. The character in the Nth position of the string tells us the type of the Nth element in the args tuple, example - Integer would be 'i', String would be 's' and a Python object would be 'O'.
-Next multiple arguments follow, these are the address of the variables where you would like to store the values of the elements just parsed. One variable for each element in the args tuple, and positional integrity is maintained.
-Here we expect only one element, so we have only `"O"`. If we expected a string, integer and a python object in that order, the argument would be `"siO"`.
+The second argument is a string that tells us how to parse each element in the args tuple. The character in the Nth position of the string tells us the type of the Nth element in the args tuple, example - 'i' would mean integer, 's' would mean string and 'O' would mean a Python object.
+Next multiple arguments follow, these are where you would like the `PyArg_ParseTuple()` function to store all the elements that it has parsed. The number of such arguments is equal to the number of arguments which the module function expects to receive, and positional integrity is maintained.
+For example if we expected a string, integer and a python list in that order, the function signature would be
+```C
+int n;
+char *s;
+PyObject* list;
+PyArg_ParseTuple(args, "siO", &n, &s, &list);
+```
+
+In this case we only have to extract a list object, and store it in the variable `listObj`. We then use the `PyList_Size()` function on our list object and get the length. This is similar to how you would call `len(list)` in python.
+
+Now we loop through the list, get each element using the `PyList_GetItem(list, index)` function. This returns a PyObject*. But since we know that the Python objects are also `PyIntType`, we just uase the `PyInt_AsLong(PyObj *)` function to get the required value. We do this for every element and finally get the sum.
+
+The sum is converted to a python object and is returned to the Python code with the help of `Py_BuildValue()`. Here the "i" indicates that the value we want to build is a python integer object.
+
+Now we build the C module. Save the following code as `setup.py`
+
+```python
+#build the modules
+
+from distutils.core import setup, Extension
+
+setup(name='addList', version='1.0',  \
+      ext_modules=[Extension('addList', ['adder.c'])])
+```
+
+and run
+```sh
+python setup.py install
+```
+
+This should now build and install the C file into the python module we desire.
+
+After all this hardwork, we'll now test if the module works -
+
+```python
+#module that talks to the C code
+import addList
+
+l = [1,2,3,4,5]
+print "Sum of List - " + str(l) + " = " +  str(addList.add(l))
+```
+
+And here is the output
+
+```
+Sum of List - [1, 2, 3, 4, 5] = 15
+```
+
+So as you can see, we have developed our first successful C Python extension using the Python.h API.
+This method does seem complex at first, but once you get used to it it can prove to be quite useful.
+
+
+Other ways to interface C code to Python is to use an alternative and faster build of python - [Cython](http://cython.org/). But Cython is a slightly different language than the main stream python we see. Hence that method is not covered here.
