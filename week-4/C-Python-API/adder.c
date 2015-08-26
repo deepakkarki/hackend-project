@@ -10,7 +10,7 @@ static PyObject* addList_add(PyObject* self, PyObject* args){
 
   //The input arguments come as a tuple, we parse the args to get the various variables
   //In this case it's only one list variable, which will now be referenced by listObj
-  if (! PyArg_ParseTuple( args, "O!", &PyList_Type, &listObj))
+  if (! PyArg_ParseTuple( args, "O", &listObj))
     return NULL;
 
   //length of the list
@@ -31,16 +31,22 @@ static PyObject* addList_add(PyObject* self, PyObject* args){
   return Py_BuildValue("i", sum);
 }
 
+//This is the docstring that corresponds to our 'add' function.
 static char addList_docs[] =
     "add( ): add all elements of the list\n";
 
+/* This table contains the relavent info mapping -
+  <function-name>, <actual-function>,
+  <type-of-args the function expects>, <docstring associated with the function>
+*/
 static PyMethodDef addList_funcs[] = {
     {"add", (PyCFunction)addList_add, METH_VARARGS, addList_docs},
     {NULL, NULL, 0, NULL}
 };
 
 /*
-addList is the module name
+addList is the module name, and this is the initialization block of the module.
+<desired module name>, <the-info-table>, <module's-docstring>
 */
 PyMODINIT_FUNC initaddList(void){
     Py_InitModule3("addList", addList_funcs,
