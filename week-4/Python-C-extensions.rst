@@ -8,12 +8,12 @@ There are three key methods developers use to call C functions from
 their python code - ``ctypes``, ``SWIG`` and ``Python/C API``. Each
 method comes with it's own merits and demerits.
 
-Firstly, why would you want to interface C with Python? A few common
-reasons are : \* You want speed and you know C is about 50x faster than
-Python. \* Certain legacy C libraries work just as well as you want them
-to, so you don't want to rewrite them in python. \* Certain low level
-resource access - from memory to file interfaces. \* Just because you
-want to.
+Firstly, why would you want to interface C with Python? 
+A few common reasons are : 
+- You want speed and you know C is about 50x faster than Python. 
+- Certain legacy C libraries work just as well as you want them to, so you don't want to rewrite them in python. 
+- Certain low level resource access - from memory to file interfaces. 
+- Just because you want to.
 
 1. CTypes
 ---------
@@ -26,7 +26,7 @@ calls can be made to C shared libraries without having to modify them.
 The fact that the C side needn't be touched adds to the simplicity of
 this method.
 
-Example :
+**Example**
 
 Simple C code to add two numbers, save it as ``add.c``
 
@@ -117,7 +117,7 @@ cases unnecessarily complex. This is a great method when you have a
 C/C++ code base, and you want to interface it to many different
 languages.
 
-Example from the `SWIG website <http://www.swig.org/tutorial.html>`__ :
+**Example** (from the `SWIG website <http://www.swig.org/tutorial.html>`__ )
 
 The C code, ``example.c`` that has a variety of functions and variables
 
@@ -205,8 +205,9 @@ to calling ``len(list)`` in python. Most of the basic
 functions/opertions that are there for native Python objects are made
 available in C via the ``Python.h`` header.
 
-Example - To write a C extension that adds all the elements in a python
-list. (all elements are numbers)
+**Example** 
+
+To write a C extension that adds all the elements in a python list. (all elements are numbers)
 
 Let's start with the final interface we'd like to have, here is the
 python file that uses the C extension :
