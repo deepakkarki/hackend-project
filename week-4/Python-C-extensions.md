@@ -12,7 +12,7 @@ A few common reasons are :
 * Certain low level resource access - from memory to file interfaces.
 * Just because you want to.
 
-##1. CTypes
+###1. CTypes
 
 The Python [ctypes module](https://docs.python.org/2/library/ctypes.html) is probably the most easiest way to call C functions from Python. The ctypes module provides C compatible data types and functions to load DLLs so that calls can be made to C shared libraries without having to modify them. The fact that the C side needn't be touched adds to the simplicity of this method.
 
@@ -74,20 +74,20 @@ Sum of 4 and 5 = 9
 Sum of 5.5 and 4.1 =  9.60000038147
 ```
 
-In this example the C file is self explanatry - it contains two functions, one to add `int`s and another to add `float`s.
+In this example the C file is self explanatory - it contains two functions, one to add two integers and another to add two floats.
 
-In the python file, first the ctypes module is imported. Then the CDLL function of the ctypes module is used to load the shared lib file we created. The functions defined in the C lib is now available to us via the `adder` variable. When `adder.add_int()` is called, internally a call is made to the `add_int` C function. The ctypes interface allows us to use native python integers and strings while calling the C functions.
+In the python file, first the ctypes module is imported. Then the CDLL function of the ctypes module is used to load the shared lib file we created. The functions defined in the C lib is now available to us via the `adder` variable. When `adder.add_int()` is called, internally a call is made to the `add_int` C function. The ctypes interface allows us to use native python integers and strings by default while calling the C functions.
 
-For other types such as boolean or float, we have to use the correct ctypes. This is seen while passing parameters to the `adder.add_float()`. We first create the required c_float types from python deciaml values, and then use them as arguments to the C code.
+For other types such as boolean or float, we have to use the correct ctypes. This is seen while passing parameters to the `adder.add_float()`. We first create the required c_float types from python decimal values, and then use them as arguments to the C code.
 This method is simple and clean, but limited. For example it's not possible to manipulate objects on the C side.
 
-##2. SWIG
+###2. SWIG
 
-Simplified Wrapper and Interface Generator, or SWIG for short is aother way to interface C code to Python. In this method, the developer must develop an extra interface file which is an input to SWIG (the command line utility).
+Simplified Wrapper and Interface Generator, or SWIG for short is another way to interface C code to Python. In this method, the developer must develop an extra interface file which is an input to SWIG (the command line utility).
 
 Python developers generally don't use this method, because it is in most cases unnecessarily complex. This is a great method when you have a C/C++ code base, and you want to interface it to many different languages.
 
-Example from the SWIG website :
+Example from the [SWIG website](http://www.swig.org/tutorial.html) :
 
 The C code, `example.c` that has a variety of functions and variables
 
@@ -130,6 +130,7 @@ The interface file - this will remain the same irrespective of the language you 
  extern int my_mod(int x, int y);
  extern char *get_time();
 ```
+
 And now to compile it
 
 ```
@@ -152,14 +153,14 @@ Finally, the Python output
 >>>
 ```
 
-As we can see, SWIG achieves the same result, but requires a slightly more involved effort. But it's worth it if you are targetting multiple languages.
+As we can see, SWIG achieves the same result, but requires a slightly more involved effort. But it's worth it if you are targeting multiple languages.
 
-##3. Python/C API
+###3. Python/C API
 
-This is probably the most widely used method - not for it's simplicity but for the fact that you can manipulate python objects in your C code.
+The [C/Python API](https://docs.python.org/2/c-api/) is probably the most widely used method - not for it's simplicity but for the fact that you can manipulate python objects in your C code.
 
 This method requires your C code to be specifically written for interfacing with Python code. All Python objects are represented as a PyObject struct and the `Python.h` header file provides various functions to manipulate it.
-For example if the PyObject is also a PyListType (basically a list), then we can use the `PyList_Size()` function on the struct to get the length of the list. This is equivalent to calling `len(list)` in python. Most of the basic functions/opertions that are there for native Python objects are made avialble in C via the `Python.h` header.
+For example if the PyObject is also a PyListType (basically a list), then we can use the `PyList_Size()` function on the struct to get the length of the list. This is equivalent to calling `len(list)` in python. Most of the basic functions/opertions that are there for native Python objects are made available in C via the `Python.h` header.
 
 Example - To write a C extension that adds all the elements in a python list. (all elements are numbers)
 
@@ -236,8 +237,8 @@ PyMODINIT_FUNC initaddList(void){
 A step by step explanation -
 * The `<Python.h>` file consists of all the required types (to represent Python object types) and function definitions (to operate on the python objects).
 * Next we write the function which we plan to call from python. Conventionally the function names are {module-name}\_{function-name}, which in this case is `addList_add`. More about the function later.
-* Then fill in the info table - which contains all the relavent info of the functions we desire to have in the module. Every row corresponds to a function, with the last one being a sentinal value (row of null elements).
-* Finally the module initalization block which is of the signature `PyMODINIT_FUNC init{module-name}`.
+* Then fill in the info table - which contains all the relevant info of the functions we desire to have in the module. Every row corresponds to a function, with the last one being a sentinel value (row of null elements).
+* Finally the module initialization block which is of the signature `PyMODINIT_FUNC init{module-name}`.
 
 The function `addList_add` accepts arguments as a PyObject type struct (args is also a tuple type - but since everything in python is an object, we use the generic PyObject notion).
 The incoming arguments is parsed (basically split the tuple into individual elements) by `PyArg_ParseTuple()`. The first parameter is the argument variable to be parsed.
@@ -253,7 +254,7 @@ PyArg_ParseTuple(args, "siO", &n, &s, &list);
 
 In this case we only have to extract a list object, and store it in the variable `listObj`. We then use the `PyList_Size()` function on our list object and get the length. This is similar to how you would call `len(list)` in python.
 
-Now we loop through the list, get each element using the `PyList_GetItem(list, index)` function. This returns a PyObject*. But since we know that the Python objects are also `PyIntType`, we just uase the `PyInt_AsLong(PyObj *)` function to get the required value. We do this for every element and finally get the sum.
+Now we loop through the list, get each element using the `PyList_GetItem(list, index)` function. This returns a PyObject*. But since we know that the Python objects are also `PyIntType`, we just use the `PyInt_AsLong(PyObj *)` function to get the required value. We do this for every element and finally get the sum.
 
 The sum is converted to a python object and is returned to the Python code with the help of `Py_BuildValue()`. Here the "i" indicates that the value we want to build is a python integer object.
 
@@ -275,7 +276,7 @@ python setup.py install
 
 This should now build and install the C file into the python module we desire.
 
-After all this hardwork, we'll now test if the module works -
+After all this hard work, we'll now test if the module works -
 
 ```python
 #module that talks to the C code
