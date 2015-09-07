@@ -13,3 +13,6 @@ Played with front end design. Used HTML5 and CSS3. Will follow this up with an h
 
 ###Week 3
 Worked with Python and C extensions. Tried ctypes, swig and python/c api. My write up was accepted as a chapter in the book [intermediate python](http://book.pythontips.com/en/latest/python_c_extension.html).
+
+###Week 4
+Worked with responsive design - currently designing my own jekyll blogging template.
